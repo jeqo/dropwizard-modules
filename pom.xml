@@ -220,4 +220,17 @@
             </plugin>
         </plugins>
     </build>
+
+
+    <scm>
+        <connection>scm:git:ssh://git@github.com/jeqo/dropwizard-modules.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jeqo/dropwizard-modules.git
+        </developerConnection>
+        <url>https://github.com/jeqo/dropwizard-modules.git</url>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/jeqo/dropwizard-modules/issues</url>
+    </issueManagement>
 </project>
