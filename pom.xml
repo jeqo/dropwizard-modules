@@ -221,7 +221,6 @@
         </plugins>
     </build>
 
-
     <scm>
         <connection>scm:git:ssh://git@github.com/jeqo/dropwizard-modules.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jeqo/dropwizard-modules.git
@@ -233,4 +232,15 @@
         <system>GitHub</system>
         <url>https://github.com/jeqo/dropwizard-modules/issues</url>
     </issueManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
