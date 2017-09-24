@@ -23,8 +23,8 @@ import java.util.List;
  *
  */
 public class ElasticsearchIndex {
-  private static final Logger LOGGER = LoggerFactory.getLogger(ElasticsearchIndex.class);
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(ElasticsearchIndex.class);
 
   @Valid
   @NotNull
@@ -63,7 +63,7 @@ public class ElasticsearchIndex {
 
   void create(RestClient restClient, ObjectMapper objectMapper) {
     try {
-      Response getIndexResponse = restClient.performRequest("GET", name);
+      Response getIndexResponse = restClient.performRequest("GET", "/" + name);
       if (getIndexResponse.getStatusLine().getStatusCode() == 404) {
         LOGGER.warn("Elasticsearch Index not found");
         LOGGER.warn("Creating Elasticsearch Index {}", name);
