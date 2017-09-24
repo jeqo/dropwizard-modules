@@ -8,6 +8,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.nio.entity.NStringEntity;
 import org.elasticsearch.client.Response;
+import org.elasticsearch.client.ResponseException;
 import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ public class ElasticsearchIndex {
   private String name;
   @Valid
   @JsonProperty
-  private Settings settings;
+  private Settings settings = new Settings();
 
   @JsonProperty
   private List<ElasticsearchMapping> mappings = new ArrayList<>();
@@ -64,21 +65,26 @@ public class ElasticsearchIndex {
   void create(RestClient restClient, ObjectMapper objectMapper) {
     try {
       Response getIndexResponse = restClient.performRequest("GET", "/" + name);
-      if (getIndexResponse.getStatusLine().getStatusCode() == 404) {
-        LOGGER.warn("Elasticsearch Index not found");
-        LOGGER.warn("Creating Elasticsearch Index {}", name);
-        final JsonNode jsonNode = getJson(objectMapper);
-        final String json = objectMapper.writeValueAsString(jsonNode);
-        LOGGER.info("Index {}: {}", name, json);
-        final HttpEntity entity = new NStringEntity(json, ContentType.APPLICATION_JSON);
-        final Response putIndexResponse =
-            restClient.performRequest("PUT", "/" + name, Collections.emptyMap(), entity);
-        if (putIndexResponse.getStatusLine().getStatusCode() == 201) {
-          LOGGER.warn("Elasticsearch Index {} created", name);
-          mappings.forEach(mapping -> mapping.create(name, restClient, objectMapper));
-        }
-      } else {
+      if (getIndexResponse.getStatusLine().getStatusCode() == 200) {
         mappings.forEach(mapping -> mapping.create(name, restClient, objectMapper));
+      }
+    } catch (ResponseException e) {
+      try {
+        if (e.getResponse().getStatusLine().getStatusCode() == 404) {
+          LOGGER.info("Elasticsearch Index not found. Creating Elasticsearch Index {}", name);
+          final JsonNode jsonNode = getJson(objectMapper);
+          final String json = objectMapper.writeValueAsString(jsonNode);
+          LOGGER.info("Index {}: {}", name, json);
+          final HttpEntity entity = new NStringEntity(json, ContentType.APPLICATION_JSON);
+          final Response putIndexResponse =
+              restClient.performRequest("PUT", "/" + name, Collections.emptyMap(), entity);
+          if (putIndexResponse.getStatusLine().getStatusCode() == 201) {
+            LOGGER.warn("Elasticsearch Index {} created", name);
+            mappings.forEach(mapping -> mapping.create(name, restClient, objectMapper));
+          }
+        }
+      } catch (Exception ex) {
+        LOGGER.warn("Error creating Index {}", name, ex);
       }
     } catch (IOException e) {
       LOGGER.warn("Error creating Index {}", name, e);
