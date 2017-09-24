@@ -16,10 +16,30 @@
 
     <packaging>pom</packaging>
 
+    <name>Dropwizard Modules: Parent</name>
+    <description>Set of modules to simplify dropwizard configuration to different platforms or back-ends</description>
+    <url>https://github.com/jeqo/dropwizard-modules/</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License v3.0</name>
+            <url>http://www.gnu.org/licenses/gpl.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Jorge Esteban Quilcate Otoya</name>
+            <email>quilcate.jorge@gmail.com</email>
+            <url>https://jeqo.github.io</url>
+        </developer>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Dependencies -->
         <dropwizard.version>1.1.2</dropwizard.version>
@@ -150,73 +170,106 @@
     </dependencyManagement>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>${maven-release-plugin.version}</version>
-                    <configuration>
-                        <tagNameFormat>v@{project.version}</tagNameFormat>
-                        <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <updateBranchVersions>true</updateBranchVersions>
-                        <pushChanges>true</pushChanges>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>${maven-jar-plugin.version}</version>
-                    <configuration>
-                        <archive>
-                            <manifest>
-                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            </manifest>
-                        </archive>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>${maven-failsafe-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>integration-test</id>
-                            <goals>
-                                <goal>integration-test</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>verify</id>
-                            <goals>
-                                <goal>verify</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.avro</groupId>
-                    <artifactId>avro-maven-plugin</artifactId>
-                    <version>${version.avro-maven}</version>
-                </plugin>
-                <!-- Test coverage report -->
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>cobertura-maven-plugin</artifactId>
-                    <version>${cobertura-maven-plugin.version}</version>
-                    <configuration>
-                        <check />
-                        <formats>
-                            <format>html</format>
-                            <format>xml</format>
-                        </formats>
-                        <aggregate>true</aggregate>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-        <!-- Test coverage report aggregation  -->
         <plugins>
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version>
+                <configuration>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <updateBranchVersions>true</updateBranchVersions>
+                    <pushChanges>true</pushChanges>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>verify</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
+                <version>${cobertura-maven-plugin.version}</version>
+                <configuration>
+                    <check/>
+                    <formats>
+                        <format>html</format>
+                        <format>xml</format>
+                    </formats>
+                    <aggregate>true</aggregate>
+                </configuration>
             </plugin>
         </plugins>
     </build>
