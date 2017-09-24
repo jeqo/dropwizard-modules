@@ -4,7 +4,7 @@
 
     <groupId>io.github.jeqo</groupId>
     <artifactId>dropwizard-modules</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
 
     <modules>
         <module>elasticsearch</module>
@@ -263,7 +263,7 @@
                 <artifactId>cobertura-maven-plugin</artifactId>
                 <version>${cobertura-maven-plugin.version}</version>
                 <configuration>
-                    <check/>
+                    <check />
                     <formats>
                         <format>html</format>
                         <format>xml</format>
@@ -279,7 +279,7 @@
         <developerConnection>scm:git:ssh://git@github.com/jeqo/dropwizard-modules.git
         </developerConnection>
         <url>https://github.com/jeqo/dropwizard-modules.git</url>
-      <tag>HEAD</tag>
+      <tag>v0.0.2</tag>
   </scm>
 
     <issueManagement>
