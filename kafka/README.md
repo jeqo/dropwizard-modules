@@ -58,7 +58,18 @@ using configuration properties.
 
 Creates a [TracingKafkaConsumer<K,V>](https://github.com/opentracing-contrib/java-kafka-client/blob/master/src/main/java/io/opentracing/contrib/kafka/TracingKafkaConsumer.java)
 using configuration properties. You need a Tracer registered on GlobalTracer helper.
-
+atom
 
 ### KafkaStreamsFactory
 
+//TODO
+
+## Health Checks
+
+### KafkaClientHealthCheck
+
+//TODO
+
+### KafkaStreamsHealthCheck
+
+//TODO

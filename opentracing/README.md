@@ -1,0 +1,4 @@
+# Dropwizard Module: OpenTracing
+
+## Factories
+

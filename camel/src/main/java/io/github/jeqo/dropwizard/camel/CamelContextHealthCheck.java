@@ -18,13 +18,13 @@ import java.util.Set;
 /**
  *
  */
-public class CamelHealthCheck extends HealthCheck {
+public class CamelContextHealthCheck extends HealthCheck {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(CamelHealthCheck.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CamelContextHealthCheck.class);
 
   private final CamelContext camelContext;
 
-  public CamelHealthCheck(CamelContext camelContext) {
+  public CamelContextHealthCheck(CamelContext camelContext) {
     this.camelContext = camelContext;
   }
 
