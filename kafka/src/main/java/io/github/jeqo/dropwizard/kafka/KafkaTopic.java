@@ -21,19 +21,19 @@ import java.util.concurrent.TimeoutException;
 /**
  *
  */
-public class KafkaTopicFactory {
+public class KafkaTopic {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTopicFactory.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTopic.class);
 
   @Valid
   @NotNull
   private String name;
   @Valid
   @NotNull
-  private Integer partitions;
+  private Integer partitions = 1;
   @Valid
   @NotNull
-  private Short replicationFactor;
+  private Short replicationFactor = 1;
   private String cleanupPolicy = "delete";
   private Long retentionMs = 604800000L;
   private Long retentionBytes = -1L;

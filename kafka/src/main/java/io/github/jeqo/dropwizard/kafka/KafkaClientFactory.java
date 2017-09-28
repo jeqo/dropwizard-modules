@@ -25,8 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+
 /**
- *
+ * Dropwizard Factory to create managed Kafka clients: Producers, Consumers and AdminClient.
  */
 public class KafkaClientFactory<K, V> {
 
@@ -38,7 +39,7 @@ public class KafkaClientFactory<K, V> {
 
   @Valid
   @JsonProperty
-  private List<KafkaTopicFactory> topics = new ArrayList<>();
+  private List<KafkaTopic> topics = new ArrayList<>();
 
   public String getBootstrapServers() {
     return bootstrapServers;
@@ -48,14 +49,23 @@ public class KafkaClientFactory<K, V> {
     this.bootstrapServers = bootstrapServers;
   }
 
-  public List<KafkaTopicFactory> getTopics() {
+  public List<KafkaTopic> getTopics() {
     return topics;
   }
 
-  public void setTopics(List<KafkaTopicFactory> topics) {
+  public void setTopics(List<KafkaTopic> topics) {
     this.topics = topics;
   }
 
+  /**
+   * Creates a {@link KafkaConsumer} using configuration properties.
+   *
+   * @param environment       Dropwizard environment
+   * @param keyDeserializer   Kafka Key Deserializer
+   * @param valueDeserializer Kafka Value Deserializer
+   * @param properties        Configuration properties
+   * @return Dropwizard managed KafkaConsumer instance
+   */
   public KafkaConsumer<K, V> buildConsumer(Environment environment,
                                            Deserializer<K> keyDeserializer,
                                            Deserializer<V> valueDeserializer,
@@ -81,6 +91,16 @@ public class KafkaClientFactory<K, V> {
     return kafkaConsumer;
   }
 
+  /**
+   * Creates a {@link KafkaConsumer} using configuration properties.
+   * You will need to have a {@link Tracer} instance registered on {@link GlobalTracer} helper.
+   *
+   * @param environment       Dropwizard environment
+   * @param keyDeserializer   Kafka Key Deserializer
+   * @param valueDeserializer Kafka Value Deserializer
+   * @param properties        Configuration properties
+   * @return Dropwizard managed KafkaConsumer instance
+   */
   public TracingKafkaConsumer<K, V> buildTracingConsumer(Environment environment,
                                                          Deserializer<K> keyDeserializer,
                                                          Deserializer<V> valueDeserializer,
@@ -92,7 +112,8 @@ public class KafkaClientFactory<K, V> {
     final KafkaConsumer<K, V> kafkaConsumer =
         new KafkaConsumer<>(configs, keyDeserializer, valueDeserializer);
     final Tracer tracer = GlobalTracer.get();
-    final TracingKafkaConsumer<K, V> tracingKafkaConsumer = new TracingKafkaConsumer<>(kafkaConsumer, tracer);
+    final TracingKafkaConsumer<K, V> tracingKafkaConsumer =
+        new TracingKafkaConsumer<>(kafkaConsumer, tracer);
 
     environment.lifecycle().manage(new Managed() {
       @Override
@@ -108,6 +129,15 @@ public class KafkaClientFactory<K, V> {
     return tracingKafkaConsumer;
   }
 
+  /**
+   * Creates a {@link KafkaProducer} using configuration properties.
+   *
+   * @param environment     Dropwizard environment
+   * @param keySerializer   Kafka Key Serializer
+   * @param valueSerializer Kafka Value Serialized
+   * @param properties      Configuration properties
+   * @return Dropwizard managed Kafka Producer instance
+   */
   public KafkaProducer<K, V> buildProducer(Environment environment,
                                            Serializer<K> keySerializer,
                                            Serializer<V> valueSerializer,
@@ -134,6 +164,16 @@ public class KafkaClientFactory<K, V> {
     return producer;
   }
 
+  /**
+   * Creates a {@link TracingKafkaProducer} using configuration properties.
+   * You will need to have a {@link Tracer} instance registered on {@link GlobalTracer} helper.
+   *
+   * @param environment     Dropwizard environment
+   * @param keySerializer   Kafka Key Serializer
+   * @param valueSerializer Kafka Value Serialized
+   * @param properties      Properties
+   * @return Dropwizard managed Kafka Producer instance
+   */
   public TracingKafkaProducer<K, V> buildTracingProducer(Environment environment,
                                                          Serializer<K> keySerializer,
                                                          Serializer<V> valueSerializer,
@@ -162,11 +202,14 @@ public class KafkaClientFactory<K, V> {
     return tracingKafkaProducer;
   }
 
-
+  /**
+   * Creates a managed Kafka Admin Client.
+   *
+   * @param environment Dropwizard environment
+   * @return Dropwizard managed Kafka Admin Client
+   */
   public AdminClient buildAdminClient(Environment environment) {
-    final Properties configs = new Properties();
-    configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-    AdminClient adminClient = KafkaAdminClient.create(configs);
+    AdminClient adminClient = getAdminClient();
 
     environment.lifecycle().manage(new Managed() {
       @Override
@@ -182,11 +225,21 @@ public class KafkaClientFactory<K, V> {
     return adminClient;
   }
 
-  public void prepareTopics(Environment environment) {
-    AdminClient adminClient = buildAdminClient(environment);
+  private AdminClient getAdminClient() {
+    final Properties configs = new Properties();
+    configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+    return KafkaAdminClient.create(configs);
+  }
+
+  /**
+   * Creates or updated Kafka Topics.
+   */
+  public void prepareTopics() {
+    AdminClient adminClient = getAdminClient();
     if (topics.isEmpty()) {
       LOGGER.info("Topic list is empty");
     }
     topics.forEach(topic -> topic.create(adminClient));
+    adminClient.close();
   }
 }
