@@ -45,7 +45,7 @@
         <dropwizard.version>1.1.2</dropwizard.version>
 
         <!-- -->
-        <elasticsearch.version>5.4.1</elasticsearch.version>
+        <elasticsearch.version>5.6.2</elasticsearch.version>
         <elasticsearch-emdedded.version>2.1.0</elasticsearch-emdedded.version>
         <opentracing-elasticsearch-client.version>0.0.3</opentracing-elasticsearch-client.version>
 
@@ -85,7 +85,12 @@
             <!-- Elasticsearch API -->
             <dependency>
                 <groupId>org.elasticsearch.client</groupId>
-                <artifactId>rest</artifactId>
+                <artifactId>elasticsearch-rest-client</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-high-level-client</artifactId>
                 <version>${elasticsearch.version}</version>
             </dependency>
             <dependency>
