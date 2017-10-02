@@ -76,12 +76,13 @@ public class ElasticsearchIndex {
           final String json = objectMapper.writeValueAsString(jsonNode);
           LOGGER.info("Index {}: {}", name, json);
           final HttpEntity entity = new NStringEntity(json, ContentType.APPLICATION_JSON);
-          final Response putIndexResponse =
-              restClient.performRequest("PUT", "/" + name, Collections.emptyMap(), entity);
-          if (putIndexResponse.getStatusLine().getStatusCode() == 201) {
-            LOGGER.warn("Elasticsearch Index {} created", name);
-            mappings.forEach(mapping -> mapping.create(name, restClient, objectMapper));
-          }
+          restClient.performRequest(
+              "PUT",
+              "/" + name,
+              Collections.emptyMap(),
+              entity);
+          LOGGER.warn("Elasticsearch Index {} created", name);
+          mappings.forEach(mapping -> mapping.create(name, restClient, objectMapper));
         }
       } catch (Exception ex) {
         LOGGER.warn("Error creating Index {}", name, ex);
