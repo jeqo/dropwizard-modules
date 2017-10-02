@@ -4,7 +4,7 @@
 
     <groupId>io.github.jeqo</groupId>
     <artifactId>dropwizard-modules</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4-SNAPSHOT</version>
 
     <modules>
         <module>elasticsearch</module>
@@ -284,7 +284,7 @@
         <developerConnection>scm:git:ssh://git@github.com/jeqo/dropwizard-modules.git
         </developerConnection>
         <url>https://github.com/jeqo/dropwizard-modules.git</url>
-      <tag>v0.0.3</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <issueManagement>
