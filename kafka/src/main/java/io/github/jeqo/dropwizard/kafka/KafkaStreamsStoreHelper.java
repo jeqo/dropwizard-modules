@@ -21,7 +21,7 @@ public class KafkaStreamsStoreHelper {
     while (true) {
       try {
         return streams.store(storeName, queryableStoreType);
-      } catch (InvalidStateStoreException ignored) {
+      } catch (InvalidStateStoreException | IllegalStateException ignored) {
         LOGGER.log(Level.WARNING, "error with state");
         // store not yet ready for querying
         Thread.sleep(100);

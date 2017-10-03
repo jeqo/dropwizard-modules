@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.github.jeqo.dropwizard.jaeger.JaegerClientFactory;
 import io.opentracing.Tracer;
 import io.opentracing.mock.MockTracer;
+import io.opentracing.util.GlobalTracer;
 
 /**
  * Dropwizard Factory for OpenTracing Tracers
@@ -29,6 +30,13 @@ public class OpenTracingFactory {
         return jaegerClientFactory.build(moduleName);
       default:
         return new MockTracer();
+    }
+  }
+
+  public void buildAndRegister(String moduleName) {
+    if (!GlobalTracer.isRegistered()) {
+      Tracer tracer = build(moduleName);
+      GlobalTracer.register(tracer);
     }
   }
 
