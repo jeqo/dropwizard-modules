@@ -12,6 +12,7 @@
         <module>jaeger</module>
         <module>camel</module>
         <module>opentracing</module>
+        <module>minio</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -72,6 +73,7 @@
         <maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
         <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <minio.version>3.0.7</minio.version>
     </properties>
 
     <dependencyManagement>
@@ -159,6 +161,13 @@
                 <artifactId>opentracing-util</artifactId>
                 <version>${opentracing-java.version}</version>
             </dependency>
+            <!-- Minio -->
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
+            </dependency>
+
             <!-- -->
             <dependency>
                 <groupId>junit</groupId>
