@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.github.jeqo.dropwizard</groupId>
         <artifactId>dropwizard-parent</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.1.0</version>
     </parent>
 
     <artifactId>dropwizard-opentracing</artifactId>
@@ -13,7 +13,7 @@
         <dependency>
             <groupId>io.github.jeqo.dropwizard</groupId>
             <artifactId>dropwizard-jaeger</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>0.1.0</version>
         </dependency>
         <dependency>
             <groupId>io.opentracing</groupId>
