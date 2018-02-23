@@ -51,9 +51,9 @@
         <opentracing-elasticsearch-client.version>0.0.3</opentracing-elasticsearch-client.version>
 
         <!-- -->
-        <kafka.version>0.11.0.0</kafka.version>
+        <kafka.version>1.0.0</kafka.version>
         <kafka-unit.version>0.6</kafka-unit.version>
-        <opentracing-kafka-client.version>0.0.4</opentracing-kafka-client.version>
+        <opentracing-kafka-client.version>0.0.8</opentracing-kafka-client.version>
 
         <!-- -->
         <opentracing-java.version>0.30.0</opentracing-java.version>

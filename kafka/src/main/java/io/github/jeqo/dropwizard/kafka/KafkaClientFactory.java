@@ -112,8 +112,7 @@ public class KafkaClientFactory<K, V> {
     final KafkaConsumer<K, V> kafkaConsumer =
         new KafkaConsumer<>(configs, keyDeserializer, valueDeserializer);
     final Tracer tracer = GlobalTracer.get();
-    final TracingKafkaConsumer<K, V> tracingKafkaConsumer =
-        new TracingKafkaConsumer<>(kafkaConsumer, tracer);
+    final TracingKafkaConsumer<K, V> tracingKafkaConsumer = new TracingKafkaConsumer<>(kafkaConsumer, tracer);
 
     environment.lifecycle().manage(new Managed() {
       @Override
@@ -183,10 +182,11 @@ public class KafkaClientFactory<K, V> {
     configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
     configs.putAll(properties);
 
-    KafkaProducer<K, V> producer =
+    final KafkaProducer<K, V> producer =
         new KafkaProducer<>(configs, keySerializer, valueSerializer);
     final Tracer tracer = GlobalTracer.get();
-    TracingKafkaProducer<K, V> tracingKafkaProducer = new TracingKafkaProducer<>(producer, tracer);
+    final TracingKafkaProducer<K, V> tracingKafkaProducer =
+        new TracingKafkaProducer<>(producer, tracer);
 
     environment.lifecycle().manage(new Managed() {
       @Override
